@@ -27,6 +27,6 @@ AnimatedSize automatically animates its size when its child's size changes, prov
 
 ## Screenshot
 
-![AnimatedSize Demo Screenshot](screenshot.png)
+![AnimatedSize Demo Screenshot](demo.gif)
 
 *Three examples showing: content expansion, expandable container, and hover effects*
