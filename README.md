@@ -1,16 +1,32 @@
-# flutter_application_3
+# Flutter AnimatedSize Widget Demo
 
-A new Flutter project.
+AnimatedSize automatically animates its size when its child's size changes, providing smooth transitions for dynamic content.
 
-## Getting Started
+## How to Run
 
-This project is a starting point for a Flutter application.
+1. Clone this repository
+2. Run `flutter pub get` to install dependencies
+3. Run `flutter run` to start the application
 
-A few resources to get you started if this is your first Flutter project:
+## Three Key Attributes of AnimatedSize
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 1. `duration` (required)
+**Type**: Duration  
+**Purpose**: Controls how long the size animation takes to complete  
+**Example**: `Duration(milliseconds: 800)` creates a smooth, 0.8-second transition
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 2. `curve` (optional)
+**Type**: Curve  
+**Purpose**: Defines the animation's easing behavior for more natural movement  
+**Example**: `Curves.bounceOut` adds a playful bounce effect at the animation's end
+
+### 3. `child` (required)
+**Type**: Widget  
+**Purpose**: The widget whose size changes trigger the AnimatedSize animation  
+**Example**: A Container that changes height based on whether content is shown or hidden
+
+## Screenshot
+
+![AnimatedSize Demo Screenshot](screenshot.png)
+
+*Three examples showing: content expansion, expandable container, and hover effects*
