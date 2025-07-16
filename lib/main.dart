@@ -10,61 +10,152 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'AnimatedSize Examples',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const ExplicitAnimationScreen(),
+      home: const AnimatedSizeScreen(),
     );
   }
 }
 
-class ExplicitAnimationScreen extends StatefulWidget {
-  const ExplicitAnimationScreen({super.key});
+class AnimatedSizeScreen extends StatefulWidget {
+  const AnimatedSizeScreen({super.key});
 
   @override
-  State<ExplicitAnimationScreen> createState() => _ExplicitAnimationScreenState();
+  State<AnimatedSizeScreen> createState() => _AnimatedSizeScreenState();
 }
 
-class _ExplicitAnimationScreenState extends State<ExplicitAnimationScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
+class _AnimatedSizeScreenState extends State<AnimatedSizeScreen>
+    with TickerProviderStateMixin {
+  
+  bool _showContent = false;
+  
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void _resetAnimations() {
+    setState(() {
+      _showContent = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Explicit Animation'),
+        title: const Text('AnimatedSize Examples'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        actions: [
+          IconButton(
+            onPressed: _resetAnimations,
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Reset Animations',
+          ),
+        ],
       ),
-      body: Center(
-        child: RotationTransition(
-          turns: _animation,
-          child: const Icon(Icons.refresh, size: 100),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildExampleCard(
+              title: 'Magic Box',
+              description: 'Tap to show/hide content with size animation',
+              child: _buildContentExpansionExample(),
+            ),
+            
+            const SizedBox(height: 20),
+          ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _controller.forward();
-        },
-        child: const Icon(Icons.play_arrow),
+    );
+  }
+
+  Widget _buildExampleCard({
+    required String title,
+    required String description,
+    required Widget child,
+  }) {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              description,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 16),
+            child,
+          ],
+        ),
       ),
+    );
+  }
+
+  Widget _buildContentExpansionExample() {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              _showContent = !_showContent;
+            });
+          },
+          child: Text(_showContent ? 'Hide Content' : 'Show Content'),
+        ),
+        const SizedBox(height: 10),
+        AnimatedSize(
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: _showContent
+                ? const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          size: 48,
+                          color: Colors.amber,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'Welcome to AnimatedSize!',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          'This content appears with a smooth size animation. '
+                          'The container grows from zero height to accommodate '
+                          'all the content inside it.',
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox(width: double.infinity),
+          ),
+        ),
+      ],
     );
   }
 }
